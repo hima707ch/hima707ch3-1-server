@@ -2,36 +2,31 @@ const express = require('express');
 const router = express.Router();
 const Property = require('./propertyModel');
 
-// Search properties
-router.get('/search', async (req, res) => {
+// Get list of properties with optional filters
+router.get('/list', async (req, res) => {
     try {
-        const { location, minPrice, maxPrice, bedrooms } = req.query;
-        
+        const { location, minPrice, maxPrice } = req.query;
         let query = {};
-        
+
         if (location) {
             query.location = { $regex: location, $options: 'i' };
         }
-        
+
         if (minPrice || maxPrice) {
             query.price = {};
             if (minPrice) query.price.$gte = Number(minPrice);
             if (maxPrice) query.price.$lte = Number(maxPrice);
         }
-        
-        if (bedrooms) {
-            query.bedrooms = Number(bedrooms);
-        }
-        
+
         const properties = await Property.find(query);
         res.json(properties);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Error fetching properties', error: error.message });
     }
 });
 
-// Get property by ID
-router.get('/:id', async (req, res) => {
+// Get property details by ID
+router.get('/details/:id', async (req, res) => {
     try {
         const property = await Property.findById(req.params.id);
         if (!property) {
@@ -39,7 +34,7 @@ router.get('/:id', async (req, res) => {
         }
         res.json(property);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Error fetching property details', error: error.message });
     }
 });
 

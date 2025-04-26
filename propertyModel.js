@@ -5,7 +5,7 @@ const propertySchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    location: {
+    description: {
         type: String,
         required: true
     },
@@ -13,7 +13,7 @@ const propertySchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    description: {
+    location: {
         type: String,
         required: true
     },
@@ -27,6 +27,10 @@ const propertySchema = new mongoose.Schema({
     },
     area: {
         type: Number,
+        required: true
+    },
+    imageUrl: {
+        type: String,
         required: true
     },
     createdAt: {
