@@ -2,51 +2,47 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const Property = require('./propertyModel');
 
-mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
-
 const sampleProperties = [
-    {
-        title: 'Modern Downtown Apartment',
-        location: 'New York City',
-        price: 500000,
-        description: 'Beautiful modern apartment in the heart of NYC',
-        bedrooms: 2,
-        bathrooms: 2,
-        area: 1000
-    },
-    {
-        title: 'Suburban Family Home',
-        location: 'Los Angeles',
-        price: 750000,
-        description: 'Spacious family home with large backyard',
-        bedrooms: 4,
-        bathrooms: 3,
-        area: 2500
-    },
-    {
-        title: 'Beachfront Condo',
-        location: 'Miami',
-        price: 600000,
-        description: 'Stunning beachfront condo with ocean views',
-        bedrooms: 3,
-        bathrooms: 2,
-        area: 1500
-    }
+  {
+    title: 'Luxury Beach House',
+    description: 'Beautiful beachfront property with amazing views',
+    price: 1200000,
+    location: 'Miami Beach',
+    bedrooms: 4,
+    bathrooms: 3,
+    area: 2500,
+    imageUrl: 'https://example.com/beach-house.jpg'
+  },
+  {
+    title: 'Downtown Apartment',
+    description: 'Modern apartment in the heart of the city',
+    price: 500000,
+    location: 'New York City',
+    bedrooms: 2,
+    bathrooms: 2,
+    area: 1200,
+    imageUrl: 'https://example.com/apartment.jpg'
+  },
+  {
+    title: 'Mountain Cabin',
+    description: 'Cozy cabin with mountain views',
+    price: 300000,
+    location: 'Aspen',
+    bedrooms: 3,
+    bathrooms: 2,
+    area: 1800,
+    imageUrl: 'https://example.com/cabin.jpg'
+  }
 ];
 
-async function seedDatabase() {
-    try {
-        await Property.deleteMany({});
-        await Property.insertMany(sampleProperties);
-        console.log('Database seeded successfully');
-        process.exit(0);
-    } catch (error) {
-        console.error('Error seeding database:', error);
-        process.exit(1);
-    }
-}
-
-seedDatabase();
+mongoose.connect(process.env.MONGODB_URI)
+  .then(async () => {
+    await Property.deleteMany({});
+    await Property.insertMany(sampleProperties);
+    console.log('Sample data inserted successfully');
+    mongoose.connection.close();
+  })
+  .catch(err => {
+    console.error('Error seeding data:', err);
+    mongoose.connection.close();
+  });
